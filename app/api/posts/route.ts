@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createPost, getAllPosts } from '@/lib/posts';
 import { CreatePostInput } from '@/lib/types';
+import { ensurePostTaxonomies } from '@/lib/cms';
 
 export async function GET(request: NextRequest) {
   try {
@@ -65,7 +66,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const post = createPost(body);
+    const tags = Array.isArray(body.tags) ? body.tags : [];
+    ensurePostTaxonomies(body.category || '', tags);
+    const post = createPost({ ...body, tags });
 
     return NextResponse.json(
       { success: true, data: post },

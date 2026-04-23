@@ -7,6 +7,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPostById, updatePost, deletePost } from '@/lib/posts';
 import { CreatePostInput } from '@/lib/types';
+import { ensurePostTaxonomies } from '@/lib/cms';
 
 export async function GET(
   request: NextRequest,
@@ -40,6 +41,9 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json() as Partial<CreatePostInput>;
+    if (body.category || body.tags) {
+      ensurePostTaxonomies(body.category || '', Array.isArray(body.tags) ? body.tags : []);
+    }
 
     const post = updatePost(id, body);
 
