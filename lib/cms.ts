@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { randomUUID } from 'crypto';
 import { dirname, join } from 'path';
 import slugify from 'slugify';
 import { Category, CreateCategoryInput, CreatePageInput, CreateTagInput, Page, Post, Tag } from './types';
@@ -42,6 +43,10 @@ function toSlug(value: string) {
   return slugify(value, { lower: true, strict: true });
 }
 
+function generatePrefixedId(prefix: string) {
+  return `${prefix}_${randomUUID()}`;
+}
+
 function readPosts(): Post[] {
   return readJson<Post[]>(postsFile, []);
 }
@@ -67,7 +72,7 @@ export function syncTaxonomiesFromPosts() {
     if (categoryName && !existingCategoryNames.has(categoryName.toLowerCase())) {
       existingCategoryNames.add(categoryName.toLowerCase());
       newCategories.push({
-        id: `cat_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+        id: generatePrefixedId('cat'),
         name: categoryName,
         slug: toSlug(categoryName),
         description: '',
@@ -81,7 +86,7 @@ export function syncTaxonomiesFromPosts() {
       if (tagName && !existingTagNames.has(tagName.toLowerCase())) {
         existingTagNames.add(tagName.toLowerCase());
         newTags.push({
-          id: `tag_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+          id: generatePrefixedId('tag'),
           name: tagName,
           slug: toSlug(tagName),
           createdAt: now,
@@ -114,7 +119,7 @@ export function createCategory(input: CreateCategoryInput): Category {
 
   const now = new Date();
   const category: Category = {
-    id: `cat_${Date.now()}`,
+    id: generatePrefixedId('cat'),
     name,
     slug: toSlug(name),
     description: input.description?.trim() || '',
@@ -198,7 +203,7 @@ export function createTag(input: CreateTagInput): Tag {
 
   const now = new Date();
   const tag: Tag = {
-    id: `tag_${Date.now()}`,
+    id: generatePrefixedId('tag'),
     name,
     slug: toSlug(name),
     createdAt: now,
@@ -262,7 +267,6 @@ export function deleteTag(id: string): { success: boolean; error?: string } {
   const updatedPosts = posts.map((post) => ({
     ...post,
     tags: post.tags.filter((item) => item.toLowerCase() !== normalized),
-    updatedAt: new Date(),
   }));
   writePosts(updatedPosts);
 
@@ -276,7 +280,7 @@ export function ensurePostTaxonomies(category: string, tags: string[]) {
     const exists = categories.some((item) => item.name.toLowerCase() === normalizedCategory.toLowerCase());
     if (!exists) {
       categories.push({
-        id: `cat_${Date.now()}`,
+        id: generatePrefixedId('cat'),
         name: normalizedCategory,
         slug: toSlug(normalizedCategory),
         description: '',
@@ -299,7 +303,7 @@ export function ensurePostTaxonomies(category: string, tags: string[]) {
         if (!known.has(tagName.toLowerCase())) {
           known.add(tagName.toLowerCase());
           toAppend.push({
-            id: `tag_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            id: generatePrefixedId('tag'),
             name: tagName,
             slug: toSlug(tagName),
             createdAt: new Date(),
@@ -339,7 +343,7 @@ export function createPage(input: CreatePageInput): Page {
 
   const now = new Date();
   const page: Page = {
-    id: `page_${Date.now()}`,
+    id: generatePrefixedId('page'),
     title,
     slug,
     description: input.description.trim(),

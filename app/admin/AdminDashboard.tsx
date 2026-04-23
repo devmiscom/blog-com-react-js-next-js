@@ -186,6 +186,9 @@ export default function AdminDashboard() {
 
   async function removePost(id: string) {
     clearMessages();
+    if (!window.confirm('Tem certeza que deseja excluir este post?')) {
+      return;
+    }
     const response = await fetch(`/api/posts/${id}`, { method: 'DELETE' });
     const data = await response.json();
 
@@ -256,6 +259,9 @@ export default function AdminDashboard() {
 
   async function removeCategory(id: string) {
     clearMessages();
+    if (!window.confirm('Tem certeza que deseja excluir esta categoria?')) {
+      return;
+    }
     const response = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
     const data = await response.json();
 
@@ -298,6 +304,9 @@ export default function AdminDashboard() {
 
   async function removeTag(id: string) {
     clearMessages();
+    if (!window.confirm('Tem certeza que deseja excluir esta tag?')) {
+      return;
+    }
     const response = await fetch(`/api/tags/${id}`, { method: 'DELETE' });
     const data = await response.json();
 
@@ -345,6 +354,9 @@ export default function AdminDashboard() {
 
   async function removePage(id: string) {
     clearMessages();
+    if (!window.confirm('Tem certeza que deseja excluir esta página?')) {
+      return;
+    }
     const response = await fetch(`/api/pages/${id}`, { method: 'DELETE' });
     const data = await response.json();
 
@@ -521,7 +533,9 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         className="rounded bg-red-100 px-3 py-1 text-xs font-semibold text-red-700"
-                        onClick={() => removePost(post.id)}
+                        onClick={() => {
+                          void removePost(post.id);
+                        }}
                       >
                         Excluir
                       </button>
@@ -594,7 +608,9 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         className="rounded bg-red-100 px-3 py-1 text-xs font-semibold text-red-700"
-                        onClick={() => removeCategory(category.id)}
+                        onClick={() => {
+                          void removeCategory(category.id);
+                        }}
                       >
                         Excluir
                       </button>
@@ -651,7 +667,9 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         className="rounded bg-red-100 px-3 py-1 text-xs font-semibold text-red-700"
-                        onClick={() => removeTag(tag.id)}
+                        onClick={() => {
+                          void removeTag(tag.id);
+                        }}
                       >
                         Excluir
                       </button>
@@ -741,7 +759,9 @@ export default function AdminDashboard() {
                       <button
                         type="button"
                         className="rounded bg-red-100 px-3 py-1 text-xs font-semibold text-red-700"
-                        onClick={() => removePage(page.id)}
+                        onClick={() => {
+                          void removePage(page.id);
+                        }}
                       >
                         Excluir
                       </button>
