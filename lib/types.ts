@@ -58,6 +58,50 @@ export interface BlogTag {
   count: number;
 }
 
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  slug: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Page {
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  content: string;
+  showInNavigation: boolean;
+  publishedAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateCategoryInput {
+  name: string;
+  description?: string;
+}
+
+export interface CreateTagInput {
+  name: string;
+}
+
+export interface CreatePageInput {
+  title: string;
+  description: string;
+  content: string;
+  showInNavigation?: boolean;
+}
+
 export interface SEOAnalysis {
   title: {
     length: number;
